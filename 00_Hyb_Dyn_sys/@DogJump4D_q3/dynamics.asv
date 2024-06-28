@@ -1,0 +1,26 @@
+function dx = dynamics(obj, ~, x, ~, ~)
+% function dx = dynamics(t, x, u)
+% q1: stance
+% q2: flight l0
+% q3: freeze
+
+% function dx = dynamics(t, x, u)
+ones_mat = ones(size(x{1}));
+q1_mask=(x{4}==1); %if q-state is stance
+q12_mask=( x{4}<=2);% if q-state is stance or flight
+
+%% For reachable set computations
+if iscell(x)
+    dx = cell(4,1);
+    dx{1} = obj.vx;
+    dx{2} = x{3};
+    dx{3} = -(obj.b/obj.M).*x{3}.*q12_mask - obj.g - (obj.k/obj.M).*(x{2}-obj.l0).*q1_mask;
+    dx{4} = 0.*ones_mat;
+end
+
+%% For simulations
+if isnumeric(x)
+  error('not implemented!')
+end
+
+end
